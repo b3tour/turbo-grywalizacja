@@ -56,7 +56,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       const { data, error } = await supabase
         .from('users')
-        .select('id, email, nick, phone, avatar_url, total_xp, level, class, is_admin, created_at, updated_at')
+        .select('id, email, nick, phone, avatar_url, total_xp, level, team_id, is_admin, created_at, updated_at')
         .eq('id', userId)
         .maybeSingle();
 
@@ -278,7 +278,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         phone: phone || null,
         total_xp: 0,
         level: 1,
-        class: 'solo',
         is_admin: false,
       };
 
@@ -292,7 +291,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const insertPromise = supabase
         .from('users')
         .insert(newProfile)
-        .select('id, email, nick, phone, avatar_url, total_xp, level, class, is_admin, created_at, updated_at')
+        .select('id, email, nick, phone, avatar_url, total_xp, level, team_id, is_admin, created_at, updated_at')
         .single();
 
       const { data, error } = await Promise.race([insertPromise, timeoutPromise]);
