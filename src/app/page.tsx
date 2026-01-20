@@ -65,11 +65,11 @@ export default function HomePage() {
 
         {/* Title */}
         <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
-          Turbo <span className="gradient-text">Challenge</span>
+          Turbo <span className="gradient-text">Grywalizacja</span>
         </h1>
 
         <p className="text-lg text-dark-300 max-w-md mb-8">
-          Dołącz do rywalizacji, wykonuj misje i zdobywaj nagrody!
+          Dołącz do drużyny, wykonuj misje i zdobywaj nagrody!
         </p>
 
         {/* CTA Buttons */}
@@ -106,7 +106,7 @@ export default function HomePage() {
 
       {/* Footer */}
       <footer className="py-6 text-center text-dark-500 text-sm">
-        <p>&copy; 2026 Turbo Challenge. Wszystkie prawa zastrzeżone.</p>
+        <p>&copy; 2026 Turbo Grywalizacja. Wszystkie prawa zastrzeżone.</p>
       </footer>
     </div>
   );

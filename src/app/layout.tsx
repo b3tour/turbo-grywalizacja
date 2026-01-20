@@ -6,17 +6,17 @@ import { Providers } from '@/components/Providers';
 const inter = Inter({ subsets: ['latin', 'latin-ext'] });
 
 export const metadata: Metadata = {
-  title: 'Turbo Challenge',
-  description: 'Aplikacja grywalizacyjna - zbieraj punkty XP, wykonuj misje, zdobywaj nagrody!',
+  title: 'Turbo Grywalizacja',
+  description: 'Rywalizacja drużynowa - zbieraj punkty XP, wykonuj misje, zdobywaj nagrody ze swoją drużyną!',
   manifest: '/manifest.json',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
-    title: 'Turbo Challenge',
+    title: 'Turbo Grywalizacja',
   },
   openGraph: {
-    title: 'Turbo Challenge',
-    description: 'Dołącz do rywalizacji i zdobywaj nagrody!',
+    title: 'Turbo Grywalizacja',
+    description: 'Dołącz do rywalizacji drużynowej i zdobywaj nagrody!',
     type: 'website',
   },
 };

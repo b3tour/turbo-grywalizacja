@@ -1,7 +1,7 @@
 {
-  "name": "Turbo Challenge",
+  "name": "Turbo Grywalizacja",
   "short_name": "Turbo",
-  "description": "Aplikacja grywalizacyjna - zbieraj punkty XP, wykonuj misje, zdobywaj nagrody!",
+  "description": "Rywalizacja drużynowa - zbieraj punkty XP, wykonuj misje, zdobywaj nagrody ze swoją drużyną!",
   "start_url": "/dashboard",
   "display": "standalone",
   "background_color": "#0f172a",
@@ -76,10 +76,10 @@
       "icons": [{ "src": "/icons/scan-shortcut.png", "sizes": "96x96" }]
     },
     {
-      "name": "Ranking",
-      "short_name": "Ranking",
-      "description": "Zobacz ranking graczy",
-      "url": "/leaderboard",
+      "name": "Drużyny",
+      "short_name": "Drużyny",
+      "description": "Zobacz ranking drużyn",
+      "url": "/teams",
       "icons": [{ "src": "/icons/leaderboard-shortcut.png", "sizes": "96x96" }]
     }
   ],
