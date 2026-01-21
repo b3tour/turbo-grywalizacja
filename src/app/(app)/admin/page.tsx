@@ -36,11 +36,14 @@ import {
   GripVertical,
   UserPlus,
   UserMinus,
+  Trophy,
+  Gavel,
 } from 'lucide-react';
 import { useTeams } from '@/hooks/useTeams';
 import { Team, TeamMember } from '@/types';
+import { ChallengesAdmin, AuctionsAdmin } from '@/components/admin';
 
-type AdminTab = 'overview' | 'submissions' | 'missions' | 'users' | 'teams';
+type AdminTab = 'overview' | 'submissions' | 'missions' | 'users' | 'teams' | 'challenges' | 'auctions';
 
 export default function AdminPage() {
   const router = useRouter();
@@ -573,6 +576,8 @@ export default function AdminPage() {
 
   const tabs = [
     { id: 'overview', label: 'Przeglad', icon: BarChart3 },
+    { id: 'challenges', label: 'Zadania', icon: Trophy },
+    { id: 'auctions', label: 'Licytacje', icon: Gavel },
     { id: 'submissions', label: 'Zgloszenia', icon: Clock, badge: stats.pendingSubmissions },
     { id: 'missions', label: 'Misje', icon: Target, badge: stats.totalMissions },
     { id: 'teams', label: 'Druzyny', icon: Users, badge: teams.length },
@@ -690,6 +695,12 @@ export default function AdminPage() {
               </Card>
             </div>
           )}
+
+          {/* Challenges Tab */}
+          {activeTab === 'challenges' && <ChallengesAdmin />}
+
+          {/* Auctions Tab */}
+          {activeTab === 'auctions' && <AuctionsAdmin />}
 
           {/* Submissions Tab */}
           {activeTab === 'submissions' && (

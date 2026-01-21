@@ -25,6 +25,8 @@ import {
   Medal,
   Users,
   AlertCircle,
+  Flame,
+  Gavel,
 } from 'lucide-react';
 import { Team, TeamLeaderboardEntry } from '@/types';
 
@@ -172,6 +174,34 @@ export default function DashboardPage() {
           <TeamCard team={userTeam} rank={teamRank || undefined} showLink={true} />
         </div>
       )}
+
+      {/* Event Section - Challenges & Auctions */}
+      <div>
+        <h2 className="text-lg font-semibold text-white flex items-center gap-2 mb-3">
+          <Flame className="w-5 h-5 text-orange-500" />
+          Turbo Event
+        </h2>
+        <div className="grid grid-cols-2 gap-3">
+          <Link href="/challenges">
+            <Card hover className="text-center py-4 border-turbo-500/20 hover:border-turbo-500/50 transition-colors">
+              <div className="w-12 h-12 rounded-xl bg-turbo-500/20 flex items-center justify-center mx-auto mb-2">
+                <Trophy className="w-6 h-6 text-turbo-500" />
+              </div>
+              <p className="font-medium text-white">Zadania</p>
+              <p className="text-xs text-dark-400">Wyzwania eventowe</p>
+            </Card>
+          </Link>
+          <Link href="/auctions">
+            <Card hover className="text-center py-4 border-orange-500/20 hover:border-orange-500/50 transition-colors">
+              <div className="w-12 h-12 rounded-xl bg-orange-500/20 flex items-center justify-center mx-auto mb-2">
+                <Gavel className="w-6 h-6 text-orange-500" />
+              </div>
+              <p className="font-medium text-white">Licytacje</p>
+              <p className="text-xs text-dark-400">Licytuj dla druzyny</p>
+            </Card>
+          </Link>
+        </div>
+      </div>
 
       {/* Quick Stats */}
       <div className="grid grid-cols-3 gap-3">
