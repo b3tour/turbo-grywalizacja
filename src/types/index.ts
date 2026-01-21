@@ -72,6 +72,12 @@ export interface Mission {
   max_completions?: number;
   created_at: string;
   image_url?: string;
+  // Pola wyścigu
+  is_race?: boolean;
+  race_started_at?: string;
+  race_points_distribution?: Record<string, number>;
+  race_active?: boolean;
+  race_ended_at?: string;
 }
 
 // Dane quizu
@@ -117,6 +123,9 @@ export interface Submission {
   xp_awarded: number;
   user?: User;
   mission?: Mission;
+  // Pola wyścigu
+  placement?: number;
+  race_time_ms?: number;
 }
 
 // Leaderboard indywidualny
@@ -449,4 +458,40 @@ export function parseTime(timeStr: string): number | null {
   } catch {
     return null;
   }
+}
+
+// =====================================================
+// WYŚCIGI (Races)
+// =====================================================
+
+// Wpis w rankingu wyścigu
+export interface RaceLeaderboardEntry {
+  submission_id: string;
+  mission_id: string;
+  mission_title: string;
+  user_id: string;
+  user_nick: string;
+  avatar_url?: string;
+  team_id: string;
+  team_name: string;
+  team_color: string;
+  team_emoji: string;
+  placement?: number;
+  race_time_ms?: number;
+  points_awarded: number;
+  status: SubmissionStatus;
+  submitted_at: string;
+  race_started_at?: string;
+}
+
+// Formatowanie czasu wyścigu (ms -> mm:ss.sss)
+export function formatRaceTime(ms: number): string {
+  const minutes = Math.floor(ms / 60000);
+  const seconds = Math.floor((ms % 60000) / 1000);
+  const milliseconds = ms % 1000;
+
+  if (minutes > 0) {
+    return `${minutes}:${seconds.toString().padStart(2, '0')}.${milliseconds.toString().padStart(3, '0')}`;
+  }
+  return `${seconds}.${milliseconds.toString().padStart(3, '0')}s`;
 }

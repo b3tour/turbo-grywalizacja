@@ -175,29 +175,38 @@ export default function DashboardPage() {
         </div>
       )}
 
-      {/* Event Section - Challenges & Auctions */}
+      {/* Event Section - Races, Challenges & Auctions */}
       <div>
         <h2 className="text-lg font-semibold text-white flex items-center gap-2 mb-3">
           <Flame className="w-5 h-5 text-orange-500" />
           Turbo Event
         </h2>
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-3 gap-3">
+          <Link href="/races">
+            <Card hover className="text-center py-4 border-green-500/20 hover:border-green-500/50 transition-colors">
+              <div className="w-10 h-10 rounded-xl bg-green-500/20 flex items-center justify-center mx-auto mb-2">
+                <Flame className="w-5 h-5 text-green-500" />
+              </div>
+              <p className="font-medium text-white text-sm">Wyścigi</p>
+              <p className="text-xs text-dark-400">Na czas!</p>
+            </Card>
+          </Link>
           <Link href="/challenges">
             <Card hover className="text-center py-4 border-turbo-500/20 hover:border-turbo-500/50 transition-colors">
-              <div className="w-12 h-12 rounded-xl bg-turbo-500/20 flex items-center justify-center mx-auto mb-2">
-                <Trophy className="w-6 h-6 text-turbo-500" />
+              <div className="w-10 h-10 rounded-xl bg-turbo-500/20 flex items-center justify-center mx-auto mb-2">
+                <Trophy className="w-5 h-5 text-turbo-500" />
               </div>
-              <p className="font-medium text-white">Zadania</p>
-              <p className="text-xs text-dark-400">Wyzwania eventowe</p>
+              <p className="font-medium text-white text-sm">Zadania</p>
+              <p className="text-xs text-dark-400">Wyzwania</p>
             </Card>
           </Link>
           <Link href="/auctions">
             <Card hover className="text-center py-4 border-orange-500/20 hover:border-orange-500/50 transition-colors">
-              <div className="w-12 h-12 rounded-xl bg-orange-500/20 flex items-center justify-center mx-auto mb-2">
-                <Gavel className="w-6 h-6 text-orange-500" />
+              <div className="w-10 h-10 rounded-xl bg-orange-500/20 flex items-center justify-center mx-auto mb-2">
+                <Gavel className="w-5 h-5 text-orange-500" />
               </div>
-              <p className="font-medium text-white">Licytacje</p>
-              <p className="text-xs text-dark-400">Licytuj dla druzyny</p>
+              <p className="font-medium text-white text-sm">Licytacje</p>
+              <p className="text-xs text-dark-400">Dla druzyny</p>
             </Card>
           </Link>
         </div>

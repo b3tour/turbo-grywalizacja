@@ -41,15 +41,17 @@ import {
   Menu,
   X,
   ChevronRight,
+  Flag,
 } from 'lucide-react';
 import { useTeams } from '@/hooks/useTeams';
 import { Team, TeamMember } from '@/types';
-import { ChallengesAdmin, AuctionsAdmin } from '@/components/admin';
+import { ChallengesAdmin, AuctionsAdmin, RacesAdmin } from '@/components/admin';
 
-type AdminTab = 'overview' | 'challenges' | 'auctions' | 'submissions' | 'missions' | 'teams' | 'users';
+type AdminTab = 'overview' | 'races' | 'challenges' | 'auctions' | 'submissions' | 'missions' | 'teams' | 'users';
 
 const tabs: { id: AdminTab; label: string; icon: React.ElementType; description: string }[] = [
   { id: 'overview', label: 'Przegląd', icon: BarChart3, description: 'Statystyki i podsumowanie' },
+  { id: 'races', label: 'Wyścigi', icon: Flag, description: 'Wyścigi drużynowe' },
   { id: 'challenges', label: 'Zadania', icon: Trophy, description: 'Zadania eventowe' },
   { id: 'auctions', label: 'Licytacje', icon: Gavel, description: 'Zarządzaj licytacjami' },
   { id: 'submissions', label: 'Zgłoszenia', icon: Clock, description: 'Weryfikuj zgłoszenia' },
@@ -777,6 +779,13 @@ export default function AdminPage() {
                       </Button>
                     </div>
                   </Card>
+                </div>
+              )}
+
+              {/* Races Tab */}
+              {activeTab === 'races' && (
+                <div>
+                  <RacesAdmin />
                 </div>
               )}
 
