@@ -146,45 +146,26 @@ export function useAuctions(): UseAuctionsReturn {
     return updateAuction(id, { status: 'cancelled' as AuctionStatus });
   };
 
-  // Zloz oferte
+  // Zloz oferte - używa funkcji SQL z SECURITY DEFINER
   const placeBid = async (auctionId: string, amount: number) => {
     if (!user || !profile?.team_id) {
       return { success: false, error: 'Musisz być zalogowany i przypisany do drużyny' };
     }
 
     try {
-      // Sprawdz czy licytacja jest aktywna
-      const auction = auctions.find(a => a.id === auctionId);
-      if (!auction) {
-        return { success: false, error: 'Licytacja nie istnieje' };
-      }
-      if (auction.status !== 'active') {
-        return { success: false, error: 'Licytacja nie jest aktywna' };
-      }
-
-      // Sprawdz minimalna oferte
-      const minBid = auction.current_price + auction.min_bid_increment;
-      if (amount < minBid) {
-        return { success: false, error: `Minimalna oferta to ${minBid}` };
-      }
-
-      // Dodaj oferte
-      const { error: insertError } = await supabase
-        .from('auction_bids')
-        .insert({
-          auction_id: auctionId,
-          team_id: profile.team_id,
-          user_id: user.id,
-          bid_amount: amount,
+      // Wywołaj funkcję SQL która ma SECURITY DEFINER
+      const { data, error: rpcError } = await supabase
+        .rpc('place_auction_bid', {
+          p_auction_id: auctionId,
+          p_bid_amount: amount,
         });
 
-      if (insertError) throw insertError;
+      if (rpcError) throw rpcError;
 
-      // Zaktualizuj aktualna cene
-      await supabase
-        .from('auctions')
-        .update({ current_price: amount })
-        .eq('id', auctionId);
+      // Funkcja zwraca JSON z success i error
+      if (data && !data.success) {
+        return { success: false, error: data.error || 'Błąd składania oferty' };
+      }
 
       await fetchAuctions();
       return { success: true, error: null };
