@@ -1,0 +1,17 @@
+ Jak wznowic prace
+
+  1. Otwórz terminal w folderze turbo-grywalizacja
+  2. Uruchom Claude Code
+  3. Wpisz:
+
+  Przeczytaj plik SESJA_2026-01-20.md i kontynuuj debugowanie problemu z Auth timeout
+
+  ---
+  Zanim wznowisz - sprawdz te rzeczy:
+
+  1. Vercel → Settings → Environment Variables - zrób screenshot
+  2. Supabase → Authentication → URL Configuration - czy Site URL to https://turbo-grywalizacja.vercel.app
+  3. Vercel → Redeploy z "Clear cache"
+  4. DevTools → Network - czy są błędy przy requestach do supabase.co
+
+  Jak wrócisz z tymi informacjami, szybciej znajdziemy problem.

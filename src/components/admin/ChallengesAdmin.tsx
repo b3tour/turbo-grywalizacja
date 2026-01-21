@@ -304,7 +304,7 @@ export default function ChallengesAdmin() {
 
   return (
     <div className="space-y-4">
-      <Button fullWidth onClick={openCreate}>
+      <Button onClick={openCreate}>
         <Plus className="w-5 h-5 mr-2" />
         Dodaj nowe zadanie
       </Button>

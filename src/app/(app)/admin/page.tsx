@@ -558,9 +558,9 @@ export default function AdminPage() {
   const currentTab = tabs.find(t => t.id === activeTab);
 
   return (
-    <div className="min-h-screen bg-dark-900">
+    <div className="min-h-screen bg-dark-900 lg:flex">
       {/* Mobile Header */}
-      <div className="lg:hidden sticky top-0 z-50 bg-dark-900/95 backdrop-blur-lg border-b border-dark-800 px-4 py-3">
+      <div className="lg:hidden sticky top-0 z-40 bg-dark-900/95 backdrop-blur-lg border-b border-dark-800 px-4 py-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <button
@@ -592,8 +592,8 @@ export default function AdminPage() {
       <aside className={`
         fixed top-0 left-0 z-50 h-full w-72 bg-dark-850 border-r border-dark-800
         transform transition-transform duration-300 ease-in-out
-        lg:translate-x-0 lg:static lg:z-0
-        ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+        lg:relative lg:translate-x-0 lg:flex-shrink-0
+        ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
       `}>
         {/* Sidebar Header */}
         <div className="p-6 border-b border-dark-800">
@@ -673,7 +673,7 @@ export default function AdminPage() {
       </aside>
 
       {/* Main Content */}
-      <main className="lg:ml-72">
+      <main className="flex-1 min-w-0">
         {/* Desktop Header */}
         <div className="hidden lg:block sticky top-0 z-40 bg-dark-900/95 backdrop-blur-lg border-b border-dark-800 px-8 py-4">
           <div className="flex items-center justify-between">
@@ -688,7 +688,7 @@ export default function AdminPage() {
         </div>
 
         {/* Content Area */}
-        <div className="p-4 lg:p-8">
+        <div className="p-4 lg:p-8 overflow-x-hidden">
           {loading && activeTab === 'overview' ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               {[1, 2, 3, 4].map(i => (
@@ -773,21 +773,21 @@ export default function AdminPage() {
 
               {/* Challenges Tab */}
               {activeTab === 'challenges' && (
-                <div className="max-w-4xl">
+                <div>
                   <ChallengesAdmin />
                 </div>
               )}
 
               {/* Auctions Tab */}
               {activeTab === 'auctions' && (
-                <div className="max-w-4xl">
+                <div>
                   <AuctionsAdmin />
                 </div>
               )}
 
               {/* Submissions Tab */}
               {activeTab === 'submissions' && (
-                <div className="max-w-4xl space-y-4">
+                <div className="space-y-4">
                   {pendingSubmissions.length === 0 ? (
                     <Card className="text-center py-12">
                       <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
@@ -841,7 +841,7 @@ export default function AdminPage() {
 
               {/* Missions Tab */}
               {activeTab === 'missions' && (
-                <div className="max-w-4xl space-y-4">
+                <div className="space-y-4">
                   <Button onClick={openCreateMission}>
                     <Plus className="w-5 h-5 mr-2" />
                     Dodaj nową misję
@@ -921,7 +921,7 @@ export default function AdminPage() {
 
               {/* Teams Tab */}
               {activeTab === 'teams' && (
-                <div className="max-w-4xl space-y-4">
+                <div className="space-y-4">
                   {/* Unassigned Users */}
                   {unassignedUsers.length > 0 && (
                     <Card className="border-yellow-500/30 bg-yellow-500/5 p-6">
@@ -1030,7 +1030,7 @@ export default function AdminPage() {
 
               {/* Users Tab */}
               {activeTab === 'users' && (
-                <div className="max-w-4xl space-y-3">
+                <div className="space-y-3">
                   {users.map((user, index) => (
                     <Card key={user.id} hover onClick={() => openUserDetails(user)} className="p-4">
                       <div className="flex items-center gap-4">
