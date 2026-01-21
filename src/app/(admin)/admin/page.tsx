@@ -617,7 +617,7 @@ export default function AdminPage() {
         </div>
 
         {/* Navigation */}
-        <nav className="p-4 space-y-1">
+        <nav className="p-4 pb-24 space-y-1 overflow-y-auto" style={{ maxHeight: 'calc(100vh - 100px)' }}>
           {tabs.map(tab => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;
