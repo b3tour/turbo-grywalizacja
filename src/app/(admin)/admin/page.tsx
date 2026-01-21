@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/lib/supabase';
 import { Card, Button, Badge, Input, Modal, AlertDialog } from '@/components/ui';
@@ -39,6 +40,7 @@ import {
   Gavel,
   Menu,
   X,
+  ChevronRight,
 } from 'lucide-react';
 import { useTeams } from '@/hooks/useTeams';
 import { Team, TeamMember } from '@/types';
@@ -659,7 +661,14 @@ export default function AdminPage() {
         </nav>
 
         {/* Sidebar Footer */}
-        <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-dark-800">
+        <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-dark-800 bg-dark-850">
+          <Link
+            href="/dashboard"
+            className="flex items-center gap-3 px-4 py-2 mb-2 rounded-xl bg-accent-500/10 hover:bg-accent-500/20 text-accent-400 transition-colors"
+          >
+            <ChevronRight className="w-4 h-4 rotate-180" />
+            <span className="text-sm font-medium">Panel gracza</span>
+          </Link>
           <div className="flex items-center gap-3 px-4 py-2">
             <div className="w-8 h-8 rounded-full bg-dark-700 flex items-center justify-center text-sm font-bold text-white">
               {profile.nick?.charAt(0).toUpperCase()}
