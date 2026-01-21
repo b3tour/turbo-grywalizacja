@@ -75,44 +75,54 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // Inicjalizacja - jednorazowo
   useEffect(() => {
     let mounted = true;
-    let timeoutId: NodeJS.Timeout;
 
     const initAuth = async () => {
-      try {
-        // Timeout na 8 sekund - jeśli Supabase nie odpowiada
-        const sessionPromise = supabase.auth.getSession();
-        const timeoutPromise = new Promise((_, reject) => {
-          timeoutId = setTimeout(() => reject(new Error('Auth timeout')), 8000);
-        });
+      // Próbuj do 3 razy z rosnącym timeoutem
+      const timeouts = [10000, 15000, 20000]; // 10s, 15s, 20s
 
-        const { data: { session } } = await Promise.race([sessionPromise, timeoutPromise]) as { data: { session: Session | null } };
-        clearTimeout(timeoutId);
-
+      for (let attempt = 0; attempt < timeouts.length; attempt++) {
         if (!mounted) return;
 
-        let profile = null;
-        if (session?.user) {
-          profile = await fetchProfile(session.user.id);
+        try {
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), timeouts[attempt]);
+
+          const { data: { session } } = await supabase.auth.getSession();
+          clearTimeout(timeoutId);
+
+          if (!mounted) return;
+
+          let profile = null;
+          if (session?.user) {
+            profile = await fetchProfile(session.user.id);
+          }
+
+          setState({
+            session,
+            user: session?.user ?? null,
+            profile,
+            loading: false,
+            error: null,
+          });
+          return; // Sukces - wyjdź z pętli
+
+        } catch (error) {
+          console.error(`Auth attempt ${attempt + 1} failed:`, error);
+
+          if (attempt === timeouts.length - 1) {
+            // Ostatnia próba - poddaj się
+            if (!mounted) return;
+            setState({
+              session: null,
+              user: null,
+              profile: null,
+              loading: false,
+              error: 'Błąd połączenia z serwerem. Odśwież stronę.',
+            });
+          }
+          // Poczekaj chwilę przed kolejną próbą
+          await new Promise(r => setTimeout(r, 1000));
         }
-
-        setState({
-          session,
-          user: session?.user ?? null,
-          profile,
-          loading: false,
-          error: null,
-        });
-      } catch (error) {
-        if (!mounted) return;
-        console.error('Auth initialization error:', error);
-        // Przy błędzie - ustaw loading na false, żeby strona się nie zawiesiła
-        setState({
-          session: null,
-          user: null,
-          profile: null,
-          loading: false,
-          error: 'Błąd połączenia z serwerem',
-        });
       }
     };
 
@@ -146,7 +156,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     return () => {
       mounted = false;
-      clearTimeout(timeoutId);
       subscription.unsubscribe();
     };
   }, [fetchProfile]);
