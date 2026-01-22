@@ -1,18 +1,20 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { Header, BottomNav, LoadingScreen } from '@/components/layout';
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
-  const { isAuthenticated, hasProfile, profile, loading, refreshProfile } = useAuth();
-  const hasTriedRefresh = useRef(false);
+  const { isAuthenticated, hasProfile, profile, loading, refreshProfile, user } = useAuth();
+  const refreshAttempts = useRef(0);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const maxRetries = 3;
 
   useEffect(() => {
     // Czekaj aż loading się zakończy
-    if (loading) return;
+    if (loading || isRefreshing) return;
 
     // Nie zalogowany -> login
     if (!isAuthenticated) {
@@ -20,20 +22,36 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       return;
     }
 
-    // Zalogowany ale bez profilu -> spróbuj odświeżyć raz, potem onboarding
-    if (!hasProfile) {
-      if (!hasTriedRefresh.current) {
-        hasTriedRefresh.current = true;
-        refreshProfile();
+    // Zalogowany ale bez profilu -> spróbuj odświeżyć kilka razy
+    if (!hasProfile && user) {
+      if (refreshAttempts.current < maxRetries) {
+        refreshAttempts.current += 1;
+        console.log(`Profile refresh attempt ${refreshAttempts.current}/${maxRetries}`);
+        setIsRefreshing(true);
+
+        // Czekaj chwilę przed próbą
+        setTimeout(async () => {
+          await refreshProfile();
+          setIsRefreshing(false);
+        }, 1000 * refreshAttempts.current); // 1s, 2s, 3s
       } else {
+        // Po 3 nieudanych próbach - przekieruj do onboarding
+        console.log('All refresh attempts failed, redirecting to onboarding');
         router.replace('/onboarding');
       }
     }
-  }, [isAuthenticated, hasProfile, loading, router, refreshProfile]);
+  }, [isAuthenticated, hasProfile, loading, router, refreshProfile, user, isRefreshing]);
 
-  // Pokaż loading tylko gdy rzeczywiście się ładuje
-  if (loading) {
-    return <LoadingScreen message="Ładowanie..." />;
+  // Reset prób przy zmianie użytkownika
+  useEffect(() => {
+    if (user?.id) {
+      refreshAttempts.current = 0;
+    }
+  }, [user?.id]);
+
+  // Pokaż loading gdy się ładuje lub odświeża
+  if (loading || isRefreshing) {
+    return <LoadingScreen message={isRefreshing ? "Ładowanie profilu..." : "Ładowanie..."} />;
   }
 
   // Nie zalogowany - pokaż loading (zaraz nastąpi redirect)
@@ -41,9 +59,14 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     return <LoadingScreen message="Przekierowywanie..." />;
   }
 
-  // Brak profilu - pokaż loading (zaraz nastąpi redirect lub refresh)
+  // Brak profilu ale mamy użytkownika - jeszcze próbujemy
+  if (!hasProfile && user && refreshAttempts.current < maxRetries) {
+    return <LoadingScreen message="Ładowanie profilu..." />;
+  }
+
+  // Brak profilu i brak użytkownika lub wyczerpane próby
   if (!hasProfile) {
-    return <LoadingScreen message="Sprawdzanie profilu..." />;
+    return <LoadingScreen message="Przekierowywanie do rejestracji..." />;
   }
 
   return (
