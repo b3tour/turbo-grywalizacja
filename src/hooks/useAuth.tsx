@@ -78,12 +78,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const initAuth = async () => {
       try {
-        // Timeout 15 sekund - jeśli nie uda się, pokaż stronę bez sesji
+        // Timeout 45 sekund - jeśli nie uda się, pokaż stronę bez sesji
         const timeoutPromise = new Promise<{ data: { session: null } }>((resolve) => {
           setTimeout(() => {
             console.warn('Auth timeout - continuing without session');
             resolve({ data: { session: null } });
-          }, 15000);
+          }, 45000);
         });
 
         const sessionPromise = supabase.auth.getSession();
@@ -289,9 +289,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       console.log('createProfile: Inserting profile...', newProfile);
 
-      // Timeout 10 sekund
+      // Timeout 30 sekund
       const timeoutPromise = new Promise<{ data: null; error: { message: string } }>((resolve) => {
-        setTimeout(() => resolve({ data: null, error: { message: 'Przekroczono limit czasu. Sprawdź połączenie z internetem.' } }), 10000);
+        setTimeout(() => resolve({ data: null, error: { message: 'Przekroczono limit czasu. Sprawdź połączenie z internetem.' } }), 30000);
       });
 
       const insertPromise = supabase

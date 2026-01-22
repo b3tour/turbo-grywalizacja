@@ -22,7 +22,9 @@ import {
   ChevronRight,
   Medal,
   Flame,
+  Gavel,
 } from 'lucide-react';
+import Link from 'next/link';
 
 const challengeTypeLabels: Record<ChallengeType, { label: string; icon: React.ReactNode; color: string }> = {
   team_timed: { label: 'Drużynowe na czas', icon: <Users className="w-4 h-4" />, color: 'text-blue-400' },
@@ -204,13 +206,42 @@ export default function ChallengesPage() {
     );
   }
 
+  const activityTabs = [
+    { href: '/missions', label: 'Misje', icon: Target, color: 'text-turbo-500', bgActive: 'bg-turbo-500/20' },
+    { href: '/races', label: 'Wyścigi', icon: Flame, color: 'text-green-500', bgActive: 'bg-green-500/20' },
+    { href: '/challenges', label: 'Zadania', icon: Trophy, color: 'text-yellow-500', bgActive: 'bg-yellow-500/20' },
+    { href: '/auctions', label: 'Licytacje', icon: Gavel, color: 'text-orange-500', bgActive: 'bg-orange-500/20' },
+  ];
+
   // List view
   return (
     <div className="py-4">
+      {/* Activity Navigation Tabs */}
+      <div className="flex gap-2 mb-4 -mx-4 px-4 overflow-x-auto pb-2">
+        {activityTabs.map(tab => {
+          const isActive = tab.href === '/challenges';
+          const Icon = tab.icon;
+          return (
+            <Link
+              key={tab.href}
+              href={tab.href}
+              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-all ${
+                isActive
+                  ? `${tab.bgActive} ${tab.color} border border-current`
+                  : 'bg-dark-700 text-dark-300 hover:bg-dark-600'
+              }`}
+            >
+              <Icon className="w-4 h-4" />
+              {tab.label}
+            </Link>
+          );
+        })}
+      </div>
+
       {/* Header */}
       <div className="flex items-center gap-3 mb-6">
-        <div className="w-12 h-12 rounded-xl bg-turbo-500/20 flex items-center justify-center">
-          <Trophy className="w-6 h-6 text-turbo-500" />
+        <div className="w-12 h-12 rounded-xl bg-yellow-500/20 flex items-center justify-center">
+          <Trophy className="w-6 h-6 text-yellow-500" />
         </div>
         <div>
           <h1 className="text-xl font-bold text-white">Zadania</h1>
