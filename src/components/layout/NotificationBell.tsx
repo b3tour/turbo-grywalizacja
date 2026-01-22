@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import Link from 'next/link';
 import { useAnnouncements, Announcement } from '@/hooks/useAnnouncements';
 import { useToast } from '@/components/ui/Toast';
 import { formatDateTime } from '@/lib/utils';
@@ -12,6 +13,7 @@ import {
   CheckCircle,
   AlertTriangle,
   AlertCircle,
+  ChevronRight,
 } from 'lucide-react';
 
 const typeConfig: Record<Announcement['type'], { icon: React.ElementType; color: string; bgColor: string }> = {
@@ -103,14 +105,14 @@ export default function NotificationBell({ userId }: NotificationBellProps) {
           </div>
 
           {/* Announcements list */}
-          <div className="overflow-y-auto max-h-72">
+          <div className="overflow-y-auto max-h-64">
             {announcements.length === 0 ? (
               <div className="text-center py-8 text-dark-400">
                 <Bell className="w-8 h-8 mx-auto mb-2 opacity-50" />
                 <p className="text-sm">Brak ogłoszeń</p>
               </div>
             ) : (
-              announcements.map(announcement => {
+              announcements.slice(0, 5).map(announcement => {
                 const config = typeConfig[announcement.type];
                 const Icon = config.icon;
 
@@ -148,6 +150,16 @@ export default function NotificationBell({ userId }: NotificationBellProps) {
               })
             )}
           </div>
+
+          {/* Footer - link to all announcements */}
+          <Link
+            href="/announcements"
+            onClick={() => setIsOpen(false)}
+            className="flex items-center justify-center gap-1 px-4 py-3 border-t border-dark-700 text-sm text-turbo-400 hover:text-turbo-300 hover:bg-dark-700/50 transition-colors"
+          >
+            Zobacz wszystkie ogłoszenia
+            <ChevronRight className="w-4 h-4" />
+          </Link>
         </div>
       )}
     </div>
