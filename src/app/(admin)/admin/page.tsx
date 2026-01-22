@@ -42,15 +42,18 @@ import {
   X,
   ChevronRight,
   Flag,
+  Bell,
 } from 'lucide-react';
 import { useTeams } from '@/hooks/useTeams';
 import { Team, TeamMember } from '@/types';
-import { ChallengesAdmin, AuctionsAdmin, RacesAdmin } from '@/components/admin';
+import { ChallengesAdmin, AuctionsAdmin, RacesAdmin, AnnouncementsAdmin } from '@/components/admin';
+import QRCodeGenerator from '@/components/admin/QRCodeGenerator';
 
-type AdminTab = 'overview' | 'races' | 'challenges' | 'auctions' | 'submissions' | 'missions' | 'teams' | 'users';
+type AdminTab = 'overview' | 'announcements' | 'races' | 'challenges' | 'auctions' | 'submissions' | 'missions' | 'teams' | 'users';
 
 const tabs: { id: AdminTab; label: string; icon: React.ElementType; description: string }[] = [
   { id: 'overview', label: 'Przegląd', icon: BarChart3, description: 'Statystyki i podsumowanie' },
+  { id: 'announcements', label: 'Ogłoszenia', icon: Bell, description: 'Powiadomienia dla graczy' },
   { id: 'races', label: 'Wyścigi', icon: Flag, description: 'Wyścigi drużynowe' },
   { id: 'challenges', label: 'Zadania', icon: Trophy, description: 'Zadania eventowe' },
   { id: 'auctions', label: 'Licytacje', icon: Gavel, description: 'Zarządzaj licytacjami' },
@@ -782,6 +785,13 @@ export default function AdminPage() {
                 </div>
               )}
 
+              {/* Announcements Tab */}
+              {activeTab === 'announcements' && (
+                <div>
+                  <AnnouncementsAdmin />
+                </div>
+              )}
+
               {/* Races Tab */}
               {activeTab === 'races' && (
                 <div>
@@ -1166,13 +1176,15 @@ export default function AdminPage() {
           </div>
 
           {missionForm.type === 'qr_code' && (
-            <Input
-              label="Wartość kodu QR"
-              value={missionForm.qr_code_value}
-              onChange={e => setMissionForm(prev => ({ ...prev, qr_code_value: e.target.value }))}
-              placeholder="Zostaw puste dla autogeneracji"
-              helperText="Unikalny kod który będzie zakodowany w QR"
-            />
+            <div className="border-t border-dark-700 pt-4">
+              <h4 className="text-sm font-medium text-dark-200 mb-3">Kod QR dla misji</h4>
+              <QRCodeGenerator
+                value={missionForm.qr_code_value}
+                missionTitle={missionForm.title}
+                size={200}
+                onValueChange={(newValue) => setMissionForm(prev => ({ ...prev, qr_code_value: newValue }))}
+              />
+            </div>
           )}
 
           {/* Quiz Editor - Simplified for space */}

@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { User } from '@/types';
 import { Avatar } from '@/components/ui';
 import { calculateLevel, calculateLevelProgress } from '@/lib/utils';
+import NotificationBell from './NotificationBell';
 
 interface HeaderProps {
   user?: User | null;
@@ -52,6 +53,8 @@ export function Header({ user }: HeaderProps) {
               </div>
             </div>
 
+            {/* Notifications */}
+            <NotificationBell userId={user.id} />
 
             {/* Avatar */}
             <Link href="/profile">
