@@ -24,6 +24,7 @@ interface AuthContextType extends AuthState {
   updateProfile: (updates: Partial<User>) => Promise<{ success: boolean; error: string | null }>;
   createProfile: (nick: string, phone?: string) => Promise<{ success: boolean; error: string | null }>;
   checkNickAvailable: (nick: string) => Promise<boolean>;
+  getEmailByNick: (nick: string) => Promise<string | null>;
   refreshProfile: () => Promise<void>;
 }
 
@@ -388,6 +389,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
+  // Pobierz email po nicku (do logowania nickiem)
+  const getEmailByNick = useCallback(async (nick: string): Promise<string | null> => {
+    try {
+      const { data, error } = await supabase
+        .from('users')
+        .select('email')
+        .eq('nick', nick)
+        .maybeSingle();
+
+      if (error || !data) {
+        return null;
+      }
+
+      return data.email;
+    } catch (e) {
+      return null;
+    }
+  }, []);
+
   // Odśwież profil
   const refreshProfile = async () => {
     if (!state.user) return;
@@ -407,6 +427,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     updateProfile,
     createProfile,
     checkNickAvailable,
+    getEmailByNick,
     refreshProfile,
   };
 

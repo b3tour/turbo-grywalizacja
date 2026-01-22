@@ -6,12 +6,12 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { Button, Input, Card } from '@/components/ui';
 import { useToast } from '@/components/ui/Toast';
-import { Mail, Lock, ArrowLeft } from 'lucide-react';
+import { User, Lock, ArrowLeft } from 'lucide-react';
 import { LogoCircle } from '@/components/ui';
 
 export default function LoginPage() {
   const router = useRouter();
-  const { signInWithGoogle, signInWithPassword, loading, isAuthenticated, hasProfile } = useAuth();
+  const { signInWithGoogle, signInWithPassword, getEmailByNick, loading, isAuthenticated, hasProfile } = useAuth();
   const { error: showError } = useToast();
 
   // Jeśli już zalogowany, przekieruj
@@ -21,24 +21,38 @@ export default function LoginPage() {
     }
   }, [loading, isAuthenticated, hasProfile, router]);
 
-  const [email, setEmail] = useState('');
+  const [loginId, setLoginId] = useState(''); // email lub nick
   const [password, setPassword] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!email || !password) {
+    if (!loginId || !password) {
       showError('Błąd', 'Wypełnij wszystkie pola');
       return;
     }
 
     setIsSubmitting(true);
 
-    const { success, error } = await signInWithPassword(email, password);
+    // Sprawdź czy to email (zawiera @) czy nick
+    let emailToUse = loginId;
+
+    if (!loginId.includes('@')) {
+      // To nick - znajdź email
+      const foundEmail = await getEmailByNick(loginId);
+      if (!foundEmail) {
+        showError('Błąd logowania', 'Nie znaleziono użytkownika o takim nicku');
+        setIsSubmitting(false);
+        return;
+      }
+      emailToUse = foundEmail;
+    }
+
+    const { success, error } = await signInWithPassword(emailToUse, password);
 
     if (!success) {
-      showError('Błąd logowania', error || 'Nieprawidłowy email lub hasło');
+      showError('Błąd logowania', error || 'Nieprawidłowy email/nick lub hasło');
     } else {
       router.push('/dashboard');
     }
@@ -74,12 +88,12 @@ export default function LoginPage() {
       <Card className="w-full max-w-sm">
         <form onSubmit={handleEmailLogin} className="space-y-4">
           <Input
-            type="email"
-            label="Email"
-            placeholder="twoj@email.pl"
-            value={email}
-            onChange={e => setEmail(e.target.value)}
-            icon={<Mail className="w-5 h-5" />}
+            type="text"
+            label="Nick lub Email"
+            placeholder="TwójNick lub twoj@email.pl"
+            value={loginId}
+            onChange={e => setLoginId(e.target.value)}
+            icon={<User className="w-5 h-5" />}
             disabled={isSubmitting || loading}
           />
 
