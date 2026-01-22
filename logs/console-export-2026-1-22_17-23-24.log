@@ -1,0 +1,151 @@
+GET
+https://turbo-grywalizacja.vercel.app/onboarding
+[HTTP/2 304  39ms]
+
+GET
+https://turbo-grywalizacja.vercel.app/_next/static/css/9f2b8da36268c685.css
+[HTTP/2 200 OK 0ms]
+
+GET
+https://turbo-grywalizacja.vercel.app/_next/static/media/8e9860b6e62d6359-s.p.woff2
+[HTTP/2 200  0ms]
+
+GET
+https://turbo-grywalizacja.vercel.app/_next/static/chunks/webpack-06724a6bd3d33115.js
+[HTTP/2 200  0ms]
+
+GET
+https://turbo-grywalizacja.vercel.app/_next/static/media/e4af272ccee01ff0-s.p.woff2
+[HTTP/2 200  0ms]
+
+GET
+https://turbo-grywalizacja.vercel.app/_next/static/chunks/fd9d1056-08e8e1829736132f.js
+[HTTP/2 200  0ms]
+
+GET
+https://ff.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=YPzZXyj2qnS5zlAwdgJ0br3c6srndVmCP2x1BcL5Jt38-MWHlo5H9XBX00KshXKsbBmExoOMtN9kynZd8cVRyNvASP06LU1cnhfAZvf9l2E
+NS_ERROR_CONNECTION_REFUSED
+
+GET
+https://turbo-grywalizacja.vercel.app/_next/static/chunks/117-a3cb12af1db892ca.js
+[HTTP/2 200  0ms]
+
+GET
+https://turbo-grywalizacja.vercel.app/_next/static/chunks/main-app-2dcde4753ea0d175.js
+[HTTP/2 200  0ms]
+
+GET
+https://turbo-grywalizacja.vercel.app/_next/static/chunks/267-8762fcb08f74d8c0.js
+[HTTP/2 200  0ms]
+
+GET
+https://turbo-grywalizacja.vercel.app/_next/static/chunks/914-448ffc3dc53e9ba5.js
+[HTTP/2 200  0ms]
+
+GET
+https://turbo-grywalizacja.vercel.app/_next/static/chunks/648-ae1829f1dce4fe83.js
+[HTTP/2 200  0ms]
+
+GET
+https://turbo-grywalizacja.vercel.app/_next/static/chunks/578-d5db0270696e696d.js
+[HTTP/2 200  0ms]
+
+GET
+https://turbo-grywalizacja.vercel.app/_next/static/chunks/396-05645cf564395050.js
+[HTTP/2 200  0ms]
+
+GET
+https://turbo-grywalizacja.vercel.app/_next/static/chunks/828-197a30d0d62154b3.js
+[HTTP/2 200  0ms]
+
+GET
+https://turbo-grywalizacja.vercel.app/_next/static/chunks/app/layout-00705f2704b31bd7.js
+[HTTP/2 200  0ms]
+
+GET
+https://turbo-grywalizacja.vercel.app/_next/static/chunks/app/(auth)/onboarding/page-ff601ee7f6909a84.js
+[HTTP/2 200  0ms]
+
+GET
+https://turbo-grywalizacja.vercel.app/_next/image?url=/heart-icon.png&w=64&q=75
+NS_BINDING_ABORTED
+
+GET
+https://turbo-grywalizacja.vercel.app/favicon.ico
+[HTTP/2 404  0ms]
+
+GET
+https://turbo-grywalizacja.vercel.app/icons/icon-192x192.png
+[HTTP/2 404  0ms]
+
+Onboarding: Checking if profile exists in database for user: 1bbc051a-d0fb-4929-8dc5-b5b3427dbbee page-ff601ee7f6909a84.js:1:1573
+GET
+https://turbo-grywalizacja.vercel.app/_next/static/chunks/7cb1fa1f-2943c685993502a3.js
+[HTTP/2 200  0ms]
+
+GET
+https://turbo-grywalizacja.vercel.app/_next/static/chunks/215-3d9fe7b1a20393f7.js
+[HTTP/2 200  0ms]
+
+GET
+https://turbo-grywalizacja.vercel.app/_next/static/chunks/355-daff999e2599e862.js
+[HTTP/2 200  0ms]
+
+GET
+https://turbo-grywalizacja.vercel.app/_next/static/chunks/363-04113ac16e0b01a6.js
+[HTTP/2 200  0ms]
+
+Onboarding: Profile EXISTS in database! Nick: b3tour page-ff601ee7f6909a84.js:1:1760
+GET
+https://turbo-grywalizacja.vercel.app/_next/static/chunks/706-160682c9b1a0c959.js
+[HTTP/2 200  0ms]
+
+GET
+https://turbo-grywalizacja.vercel.app/_next/static/chunks/app/(app)/layout-a33ab296892a5ed1.js
+[HTTP/2 200  0ms]
+
+GET
+https://turbo-grywalizacja.vercel.app/_next/static/chunks/app/(app)/dashboard/page-1a5d079ee0372071.js
+[HTTP/2 200  0ms]
+
+GET
+https://turbo-grywalizacja.vercel.app/_next/image?url=/heart-icon.png&w=32&q=75
+NS_BINDING_ABORTED
+
+GET
+https://turbo-grywalizacja.vercel.app/_next/image?url=/heart-icon.png&w=32&q=75
+[HTTP/2 304  36ms]
+
+GET
+wss://pdyfxdjmebyfiucwgtco.supabase.co/realtime/v1/websocket?apikey=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBkeWZ4ZGptZWJ5Zml1Y3dndGNvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg5MzE5OTIsImV4cCI6MjA4NDUwNzk5Mn0.4usEnq3lZlJa6L9ksgBZImAw_IT08jHfTJJyG3LM1Ak&vsn=1.0.0
+[HTTP/1.1 101 Switching Protocols 217ms]
+
+GET
+https://turbo-grywalizacja.vercel.app/_next/static/chunks/app/(app)/challenges/page-2bf78510ca3786ab.js
+[HTTP/2 200  0ms]
+
+GET
+https://turbo-grywalizacja.vercel.app/_next/static/chunks/app/(app)/missions/page-14be7d7537212299.js
+[HTTP/2 200  0ms]
+
+GET
+https://turbo-grywalizacja.vercel.app/_next/static/chunks/app/(app)/profile/page-d54437e4ee9c700a.js
+[HTTP/2 200  0ms]
+
+GET
+https://turbo-grywalizacja.vercel.app/_next/static/chunks/app/(app)/auctions/page-15416d22d470ff8a.js
+[HTTP/2 200  0ms]
+
+GET
+https://turbo-grywalizacja.vercel.app/_next/static/chunks/app/(app)/races/page-1b686cdcac1e4948.js
+[HTTP/2 200  0ms]
+
+Ciasteczko „__cf_bm” zostało odrzucone z powodu nieprawidłowej domeny. websocket
+GET
+https://turbo-grywalizacja.vercel.app/_next/static/chunks/app/(app)/scan/page-a9eb79ffa9ebbbdf.js
+[HTTP/2 200  0ms]
+
+GET
+https://turbo-grywalizacja.vercel.app/_next/static/chunks/app/(app)/teams/page-e7e4fe4d4a7bbf8f.js
+[HTTP/2 200  0ms]
+

@@ -1,12 +1,11 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { useMissions } from '@/hooks/useMissions';
 import { useTeams } from '@/hooks/useTeams';
-import { Card, Badge, Button, ProgressBar, Avatar } from '@/components/ui';
+import { Card, Badge, ProgressBar, Avatar } from '@/components/ui';
 import { MissionCard } from '@/components/missions';
 import { TeamCard, TeamBadge } from '@/components/teams';
 import {
@@ -28,7 +27,6 @@ import {
   Flame,
   Gavel,
 } from 'lucide-react';
-import { Team, TeamLeaderboardEntry } from '@/types';
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -37,51 +35,13 @@ export default function DashboardPage() {
     userId: profile?.id,
     activeOnly: true,
   });
-  const { teams, getTeam, getTeamLeaderboard, getTeamRank } = useTeams();
+  const { teams, leaderboard, loading: teamsLoading, getTeam, getTeamRank } = useTeams();
 
-  const [userTeam, setUserTeam] = useState<Team | null>(null);
-  const [teamRank, setTeamRank] = useState<number | null>(null);
-  const [topTeams, setTopTeams] = useState<TeamLeaderboardEntry[]>([]);
-  const [loadingTeam, setLoadingTeam] = useState(true);
-  const hasFetchedTeamData = useRef(false);
-  const lastProfileTeamId = useRef<string | null | undefined>(undefined);
-
-  useEffect(() => {
-    // Sprawdź czy profil się zmienił lub team_id się zmienił
-    const teamIdChanged = lastProfileTeamId.current !== profile?.team_id;
-    const shouldFetch = profile && (!hasFetchedTeamData.current || teamIdChanged);
-
-    if (!shouldFetch) return;
-
-    lastProfileTeamId.current = profile?.team_id;
-    hasFetchedTeamData.current = true;
-
-    const fetchTeamData = async () => {
-      setLoadingTeam(true);
-
-      // Pobierz druzyne uzytkownika
-      if (profile?.team_id) {
-        const team = await getTeam(profile.team_id);
-        setUserTeam(team);
-
-        if (team) {
-          const rank = await getTeamRank(team.id);
-          setTeamRank(rank);
-        }
-      } else {
-        setUserTeam(null);
-        setTeamRank(null);
-      }
-
-      // Pobierz top 3 druzyny
-      const leaderboard = await getTeamLeaderboard();
-      setTopTeams(leaderboard.slice(0, 3));
-
-      setLoadingTeam(false);
-    };
-
-    fetchTeamData();
-  }, [profile?.id, profile?.team_id]); // Tylko profile.id i team_id jako zależności
+  // Dane z cache - synchroniczne
+  const userTeam = profile?.team_id ? getTeam(profile.team_id) : null;
+  const teamRank = userTeam ? getTeamRank(userTeam.id) : null;
+  const topTeams = leaderboard.slice(0, 3);
+  const loadingTeam = teamsLoading;
 
   if (!profile) return null;
 
