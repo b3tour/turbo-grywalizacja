@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/lib/supabase';
 import { Button, Input, Card } from '@/components/ui';
 import { useToast } from '@/components/ui/Toast';
 import { LoadingScreen } from '@/components/layout';
@@ -18,6 +19,7 @@ export default function OnboardingPage() {
     loading,
     createProfile,
     checkNickAvailable,
+    refreshProfile,
   } = useAuth();
   const { error: showError, success: showSuccess } = useToast();
 
@@ -26,8 +28,47 @@ export default function OnboardingPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [nickStatus, setNickStatus] = useState<'idle' | 'checking' | 'available' | 'taken'>('idle');
   const [nickError, setNickError] = useState<string | null>(null);
+  const [checkingExistingProfile, setCheckingExistingProfile] = useState(true);
+  const hasCheckedProfile = useRef(false);
 
-  // Przekieruj jeśli użytkownik ma już profil
+  // WAŻNE: Sprawdź bezpośrednio w bazie czy profil istnieje
+  // (może być że state hasProfile jest false przez błąd ładowania)
+  useEffect(() => {
+    const checkExistingProfile = async () => {
+      if (!user?.id || hasCheckedProfile.current) return;
+
+      hasCheckedProfile.current = true;
+      console.log('Onboarding: Checking if profile exists in database for user:', user.id);
+
+      try {
+        const { data, error } = await supabase
+          .from('users')
+          .select('id, nick')
+          .eq('id', user.id)
+          .maybeSingle();
+
+        if (data && !error) {
+          // Profil ISTNIEJE w bazie - odśwież state i przekieruj
+          console.log('Onboarding: Profile EXISTS in database! Nick:', data.nick);
+          await refreshProfile();
+          router.replace('/dashboard');
+          return;
+        }
+
+        console.log('Onboarding: No profile found, showing form');
+      } catch (e) {
+        console.error('Onboarding: Error checking profile:', e);
+      }
+
+      setCheckingExistingProfile(false);
+    };
+
+    if (user?.id && !loading) {
+      checkExistingProfile();
+    }
+  }, [user?.id, loading, router, refreshProfile]);
+
+  // Przekieruj jeśli użytkownik ma już profil (z auth state)
   useEffect(() => {
     if (!loading && hasProfile) {
       router.push('/dashboard');
@@ -109,8 +150,8 @@ export default function OnboardingPage() {
     setIsSubmitting(false);
   };
 
-  if (loading || hasProfile) {
-    return <LoadingScreen message="Przygotowywanie..." />;
+  if (loading || hasProfile || checkingExistingProfile) {
+    return <LoadingScreen message="Sprawdzanie profilu..." />;
   }
 
   const getNickIcon = () => {
