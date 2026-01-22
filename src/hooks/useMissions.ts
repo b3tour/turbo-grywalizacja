@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { supabase } from '@/lib/supabase';
 import { Mission, Submission, MissionType } from '@/types';
 
@@ -15,9 +15,13 @@ export function useMissions(options: UseMissionsOptions = {}) {
   const [userSubmissions, setUserSubmissions] = useState<Submission[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const isInitialLoad = useRef(true);
 
   const fetchMissions = useCallback(async () => {
-    setLoading(true);
+    // Tylko przy pierwszym ładowaniu pokazuj loading
+    if (isInitialLoad.current) {
+      setLoading(true);
+    }
     setError(null);
 
     let query = supabase
@@ -43,6 +47,7 @@ export function useMissions(options: UseMissionsOptions = {}) {
     }
 
     setLoading(false);
+    isInitialLoad.current = false;
   }, [options.type, options.activeOnly]);
 
   const fetchUserSubmissions = useCallback(async () => {

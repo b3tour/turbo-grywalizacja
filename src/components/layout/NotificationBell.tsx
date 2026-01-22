@@ -41,7 +41,8 @@ export default function NotificationBell({ userId }: NotificationBellProps) {
       }
     }
     setLastSeenCount(unreadCount);
-  }, [unreadCount, announcements, lastSeenCount, info]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [unreadCount]); // Tylko unreadCount - info jest stabilny, announcements potencjalnie nie
 
   // Zamknij dropdown gdy klikniemy poza
   useEffect(() => {

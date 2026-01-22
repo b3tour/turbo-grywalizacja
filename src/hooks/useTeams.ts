@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { supabase } from '@/lib/supabase';
 import { Team, TeamMember, TeamLeaderboardEntry } from '@/types';
 import { LEVELS } from '@/lib/utils';
@@ -15,10 +15,19 @@ export function useTeams(options: UseTeamsOptions = {}) {
   const [teams, setTeams] = useState<Team[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const isInitialLoad = useRef(true);
+  const isFetching = useRef(false);
 
   // Pobierz wszystkie druzyny
-  const fetchTeams = useCallback(async () => {
-    setLoading(true);
+  const fetchTeams = useCallback(async (showLoading = false) => {
+    // Zapobiegaj równoległym zapytaniom
+    if (isFetching.current) return;
+    isFetching.current = true;
+
+    // Tylko przy pierwszym ładowaniu pokazuj loading
+    if (showLoading || isInitialLoad.current) {
+      setLoading(true);
+    }
     setError(null);
 
     const { data, error: fetchError } = await supabase
@@ -26,14 +35,18 @@ export function useTeams(options: UseTeamsOptions = {}) {
       .select('*')
       .order('total_xp', { ascending: false });
 
+    isFetching.current = false;
+
     if (fetchError) {
       setError(fetchError.message);
       setLoading(false);
+      isInitialLoad.current = false;
       return;
     }
 
     setTeams(data || []);
     setLoading(false);
+    isInitialLoad.current = false;
   }, []);
 
   // Pobierz szczegoly druzyny po ID
@@ -185,9 +198,19 @@ export function useTeams(options: UseTeamsOptions = {}) {
 
   // Real-time subscription
   useEffect(() => {
-    fetchTeams();
+    fetchTeams(true); // Przy pierwszym ładowaniu pokaż loading
 
     if (!realtime) return;
+
+    // Debounce dla real-time updates - zapobiega wielu szybkim odświeżeniom
+    let debounceTimer: NodeJS.Timeout | null = null;
+
+    const debouncedFetch = () => {
+      if (debounceTimer) clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => {
+        fetchTeams(false); // Real-time update bez loading state
+      }, 500); // Czekaj 500ms przed odświeżeniem
+    };
 
     const subscription = supabase
       .channel('teams-changes')
@@ -199,24 +222,16 @@ export function useTeams(options: UseTeamsOptions = {}) {
           table: 'teams',
         },
         () => {
-          fetchTeams();
-        }
-      )
-      .on(
-        'postgres_changes',
-        {
-          event: 'UPDATE',
-          schema: 'public',
-          table: 'users',
-        },
-        () => {
-          // Odswiez gdy zmieni sie team_id lub XP uzytkownika
-          fetchTeams();
+          debouncedFetch();
         }
       )
       .subscribe();
 
+    // NIE subskrybujemy do users - za dużo eventów
+    // Dane drużyn będą odświeżane tylko gdy zmieni się sama drużyna
+
     return () => {
+      if (debounceTimer) clearTimeout(debounceTimer);
       subscription.unsubscribe();
     };
   }, [fetchTeams, realtime]);

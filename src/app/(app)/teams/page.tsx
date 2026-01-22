@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useTeams } from '@/hooks/useTeams';
 import { TeamLeaderboard } from '@/components/teams';
 import { TeamLeaderboardEntry } from '@/types';
@@ -10,19 +10,22 @@ export default function TeamsPage() {
   const { teams, loading, getTeamLeaderboard } = useTeams();
   const [leaderboard, setLeaderboard] = useState<TeamLeaderboardEntry[]>([]);
   const [loadingLeaderboard, setLoadingLeaderboard] = useState(true);
+  const hasFetched = useRef(false);
 
   useEffect(() => {
-    const fetchLeaderboard = async () => {
-      setLoadingLeaderboard(true);
-      const data = await getTeamLeaderboard();
-      setLeaderboard(data);
-      setLoadingLeaderboard(false);
-    };
+    // Pobierz leaderboard tylko raz gdy teams się załadują
+    if (!loading && !hasFetched.current) {
+      hasFetched.current = true;
 
-    if (!loading) {
+      const fetchLeaderboard = async () => {
+        const data = await getTeamLeaderboard();
+        setLeaderboard(data);
+        setLoadingLeaderboard(false);
+      };
+
       fetchLeaderboard();
     }
-  }, [loading, getTeamLeaderboard]);
+  }, [loading]); // Tylko loading jako zależność - getTeamLeaderboard jest stabilny przez useCallback
 
   // Statystyki
   const totalMembers = teams.reduce((sum, t) => sum + t.member_count, 0);

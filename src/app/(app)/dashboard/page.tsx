@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
@@ -43,8 +43,19 @@ export default function DashboardPage() {
   const [teamRank, setTeamRank] = useState<number | null>(null);
   const [topTeams, setTopTeams] = useState<TeamLeaderboardEntry[]>([]);
   const [loadingTeam, setLoadingTeam] = useState(true);
+  const hasFetchedTeamData = useRef(false);
+  const lastProfileTeamId = useRef<string | null | undefined>(undefined);
 
   useEffect(() => {
+    // Sprawdź czy profil się zmienił lub team_id się zmienił
+    const teamIdChanged = lastProfileTeamId.current !== profile?.team_id;
+    const shouldFetch = profile && (!hasFetchedTeamData.current || teamIdChanged);
+
+    if (!shouldFetch) return;
+
+    lastProfileTeamId.current = profile?.team_id;
+    hasFetchedTeamData.current = true;
+
     const fetchTeamData = async () => {
       setLoadingTeam(true);
 
@@ -57,6 +68,9 @@ export default function DashboardPage() {
           const rank = await getTeamRank(team.id);
           setTeamRank(rank);
         }
+      } else {
+        setUserTeam(null);
+        setTeamRank(null);
       }
 
       // Pobierz top 3 druzyny
@@ -66,10 +80,8 @@ export default function DashboardPage() {
       setLoadingTeam(false);
     };
 
-    if (profile) {
-      fetchTeamData();
-    }
-  }, [profile, getTeam, getTeamRank, getTeamLeaderboard]);
+    fetchTeamData();
+  }, [profile?.id, profile?.team_id]); // Tylko profile.id i team_id jako zależności
 
   if (!profile) return null;
 
